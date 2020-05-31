@@ -52,20 +52,21 @@ Get a player timeline - list of tuples with (time, INFO)
 Timelines are partioned by quarters/periods
 """
 class PbpParser(HTMLParser):
-    td_count = 0
-    score_timeline = []
-    player_timeline = []
-    row_data = []
-    cell_data = []
-    current_score = "0-0"
-    PLAYER_NAME = None
-    q_index = -1
-
     def __init__(self, PLAYER_NAME=None, AT_HOME=None):
         super().__init__()
+
+        self.td_count = 0
+        self.score_timeline = []
+        self.player_timeline = []
+        self.row_data = []
+        self.cell_data = []
+        self.current_score = "0-0"
+        self.q_index = -1
+
         self.PLAYER_NAME = PLAYER_NAME #K.Bryant
-        #If player is playing at home, their action data will be in cell #6, otherwise it will be cell #2
+        #If player is playing at home, their action data will be in cell #5, otherwise it will be cell #1 (0-indexed)
         self.PLAYER_ACTION_CELL = 5 if AT_HOME else 1
+
 
     def handle_starttag(self, tag, attrs):
         if tag == "td":
@@ -134,15 +135,13 @@ Goal:
 Get minutes played for PLAYER_NAME
 """
 class BoxScoreParser(HTMLParser):
-    player_mp = None
-    in_player_row = False
-    in_mp_cell = False
-    PLAYER_NAME = None
-    found = False
-
     def __init__(self, PLAYER_NAME=None):
         super().__init__()
         self.PLAYER_NAME = PLAYER_NAME
+        self.player_mp = None
+        self.in_player_row = False
+        self.in_mp_cell = False
+        self.found = False
 
     def handle_starttag(self, tag, attrs):
         if self.found:
