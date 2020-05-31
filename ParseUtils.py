@@ -1,3 +1,6 @@
+"""
+at_home = True - Return home teams time up window
+"""
 def get_team_time_up_windows(score_timeline, at_home):
     team_a_score_idx = 1 if at_home else 0
     team_b_score_idx = 0 if at_home else 1
@@ -26,6 +29,7 @@ def get_team_time_up_windows(score_timeline, at_home):
     return time_up
 
 def get_player_time_on_windows(player_timeline):
+    print("Player timline:\n", player_timeline)
     time_on = []
     idx = -1
     w_start, w_end = None, None
@@ -37,7 +41,7 @@ def get_player_time_on_windows(player_timeline):
                 w_start = "12:00.0"
             elif record[1] == "SUB-OUT":
                 w_end = record[0]
-                time_on[idx].append((w_start, w_end))
+                time_on[idx].append((w_start or "12:00.0", w_end))
                 w_start = None
             elif record[1] == "SUB-IN":
                 w_start = record[0]
@@ -47,6 +51,8 @@ def get_player_time_on_windows(player_timeline):
     return time_on
 
 def _get_player_time_up(team_time_up, player_time_on):
+    print("Team up windows:\n", team_time_up)
+    print("Player on windows:\n", player_time_on)
     def window_intersects(w1_, w2_):
         #get length of window in seconds
         def time_diff(t1, t2):
